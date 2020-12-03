@@ -32,32 +32,58 @@ Multiplying them together produces 1721 * 299 = 514579, so the correct answer is
 
 Of course, your expense report is much larger.
 Find the two entries that sum to 2020; what do you get if you multiply them together?
+
+--- Part Two ---
+The Elves in accounting are thankful for your help; one of them even offers you a starfish coin they had left over from a past vacation. They offer you a second one if you can find three numbers in your expense report that meet the same criteria.
+
+Using the above example again, the three entries that sum to 2020 are 979, 366, and 675. Multiplying them together produces the answer, 241861950.
+
+In your expense report, what is the product of the three entries that sum to 2020?
+
+
+
 */
 
+use crate::bst::BinarySearchTree;
 use std::io::Read;
 
+#[allow(dead_code)]
 pub fn run() {
     let mut file = std::fs::File::open("res/1/input").unwrap();
     let mut contents = String::new();
+    let mut tree = BinarySearchTree::new();
+
     file.read_to_string(&mut contents).unwrap();
-    let mut expenses: Vec<i32> = Vec::new();
     for line in contents.lines() {
         let expense = line.parse::<i32>().unwrap();
-        expenses.push(expense);
+        tree.insert(expense);
     }
 
-    expenses.sort();
-
-    // naive approach
+    let mut expenses: Vec<i32> = Vec::new();
+    tree.sort(&mut expenses);
+    let mut answers: Vec<i32> = Vec::new();
     for i in 0..expenses.len() {
         let a = expenses[i];
-        let mut found = false;
-        for j in 0..expenses.len() {
-            let b = expenses[expenses.len() - j - 1];
-            let sum = a + b;
-            if sum == 2020 {
+        let b = 2020 - a;
+        if tree.contains(b) {
+            let answer = a * b;
+            answers.push(answer);
+            println!("Part 1: {}", a * b);
+            break;
+        }
+    }
+
+    let mut found = false;
+    for i in 0..expenses.len() {
+        let a = expenses[i];
+        for j in (i + 1)..expenses.len() {
+            let b = expenses[j];
+            let c = 2020 - a - b;
+            if tree.contains(c) {
+                let answer = a * b * c;
+                answers.push(answer);
+                println!("Part 2: {}", a * b * c);
                 found = true;
-                println!("a: {}\nb: {}\nanswer: {}", a, b, a * b);
                 break;
             }
         }
