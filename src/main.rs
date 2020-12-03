@@ -1,10 +1,9 @@
 mod bst;
 mod problems;
 
-// use problems;
-fn main() {
-    problems::day1::run()
+#[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 
-    // day1::run()
-    // problems::problems
+fn main() {
+    // problems::day1::run();
+    problems::day2::run();
 }
