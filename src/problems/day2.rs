@@ -52,6 +52,7 @@ pub fn policy2<'a>(policy: &'a Policy) -> bool {
     return exists_at_min != exists_at_max;
 }
 
+#[allow(unused_mut)]
 pub fn run() {
     let mut file = std::fs::File::open("res/2/input").unwrap();
     let mut contents = String::new();
