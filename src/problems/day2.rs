@@ -30,11 +30,13 @@ pub struct Policy<'a> {
     pub value: &'a str,
 }
 
+#[allow(dead_code)]
 pub fn policy1<'a>(policy: &'a Policy) -> bool {
     let count: i32 = policy.value.chars().filter(|x| x == &policy.letter).count() as i32;
     count >= policy.min && count <= policy.max
 }
 
+#[allow(dead_code)]
 pub fn policy2<'a>(policy: &'a Policy) -> bool {
     let exists_at_min = policy
         .value
@@ -52,8 +54,9 @@ pub fn policy2<'a>(policy: &'a Policy) -> bool {
     return exists_at_min != exists_at_max;
 }
 
-#[allow(unused_mut)]
+#[allow(unused_mut, dead_code)]
 pub fn run() {
+    println!("Day 2");
     let mut file = std::fs::File::open("res/2/input").unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
@@ -82,6 +85,7 @@ pub fn run() {
         }
     }
 
-    println!("policy 1: {}", policy1_valid_count);
-    println!("policy 2: {}", policy2_valid_count);
+    println!("Part 1: {}", policy1_valid_count);
+    println!("Part 2: {}", policy2_valid_count);
+    println!("\n");
 }

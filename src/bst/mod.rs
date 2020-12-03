@@ -175,7 +175,7 @@ mod tests {
         bs_tree.insert(15);
         bs_tree.insert(20);
 
-        assert_eq!(bs_tree.find_closest(2).expect("no elements"), 0);
+        assert_eq!(bs_tree.find_closest(2).expect("no elements"), 5);
         assert_eq!(bs_tree.find_closest(9).expect("no elements"), 10);
         assert_eq!(bs_tree.find_closest(17).expect("no elements"), 20);
     }

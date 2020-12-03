@@ -49,6 +49,8 @@ use std::io::Read;
 
 #[allow(dead_code)]
 pub fn run() {
+    println!("Day 1");
+
     let mut file = std::fs::File::open("res/1/input").unwrap();
     let mut contents = String::new();
     let mut tree = BinarySearchTree::new();
@@ -91,4 +93,5 @@ pub fn run() {
             break;
         }
     }
+    println!("\n");
 }
