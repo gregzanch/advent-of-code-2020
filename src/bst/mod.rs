@@ -9,6 +9,7 @@ pub struct BinarySearchTree {
 }
 
 impl BinarySearchTree {
+    #[allow(dead_code)]
     pub fn new() -> Self {
         BinarySearchTree {
             root: None,
@@ -20,10 +21,12 @@ impl BinarySearchTree {
         self.count == 0
     }
 
+    #[allow(dead_code)]
     fn new_node_option(&self, value: i32) -> NodeOption {
         Some(Rc::new(RefCell::new(Node::new(value))))
     }
 
+    #[allow(dead_code)]
     pub fn insert(&mut self, value: i32) {
         if self.is_empty() {
             self.root = self.new_node_option(value);
@@ -68,10 +71,12 @@ impl BinarySearchTree {
         self.count += 1;
     }
 
+    #[allow(dead_code)]
     pub fn sort(&self, arr: &mut Vec<i32>) {
         self.in_order(&self.root, arr);
     }
 
+    #[allow(dead_code)]
     fn in_order(&self, root: &NodeOption, arr: &mut Vec<i32>) {
         if let Some(node) = root {
             self.in_order(&node.borrow().left, arr);
@@ -80,6 +85,33 @@ impl BinarySearchTree {
         }
     }
 
+    #[allow(dead_code)]
+    pub fn contains(&self, value: i32) -> bool {
+        if self.is_empty() {
+            return false;
+        }
+
+        let mut current_node = Rc::clone(self.root.as_ref().unwrap());
+
+        loop {
+            let next_node;
+            if value == current_node.borrow().value {
+                return true;
+            } else if value < current_node.borrow().value {
+                match &current_node.borrow().left {
+                    Some(left_node) => next_node = Rc::clone(left_node),
+                    _ => return false,
+                }
+            } else {
+                match &current_node.borrow().right {
+                    Some(right_node) => next_node = Rc::clone(right_node),
+                    _ => return false,
+                }
+            }
+            current_node = next_node;
+        }
+    }
+    #[allow(dead_code)]
     pub fn find_closest(&self, value: i32) -> Result<i32, bool> {
         if self.is_empty() {
             return Err(false);
@@ -107,6 +139,7 @@ impl BinarySearchTree {
         }
     }
 
+    #[allow(dead_code)]
     pub fn reset(&mut self) {
         self.root.take();
         self.count = 0;
@@ -136,16 +169,14 @@ mod tests {
     fn test_find() {
         let mut bs_tree = BinarySearchTree::new();
 
-        bs_tree.insert(8);
+        bs_tree.insert(0);
+        bs_tree.insert(5);
+        bs_tree.insert(10);
+        bs_tree.insert(15);
         bs_tree.insert(20);
-        bs_tree.insert(3);
-        bs_tree.insert(25);
-        bs_tree.insert(7);
 
-        let a = bs_tree.find_closest(5).expect("no elements");
-        let c = bs_tree.find_closest(99).expect("no elements");
-
-        assert_eq!(a, 7);
-        assert_eq!(c, 25);
+        assert_eq!(bs_tree.find_closest(2).expect("no elements"), 0);
+        assert_eq!(bs_tree.find_closest(9).expect("no elements"), 10);
+        assert_eq!(bs_tree.find_closest(17).expect("no elements"), 20);
     }
 }
