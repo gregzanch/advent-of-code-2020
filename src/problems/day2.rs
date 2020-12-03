@@ -20,11 +20,67 @@ In the above example, 2 passwords are valid. The middle password, cdefg, is not;
 How many passwords are valid according to their policies?
 */
 
+use regex::Regex;
 use std::io::Read;
+
+pub struct Policy<'a> {
+    pub min: i32,
+    pub max: i32,
+    pub letter: char,
+    pub value: &'a str,
+}
+
+pub fn policy1<'a>(policy: &'a Policy) -> bool {
+    let count: i32 = policy.value.chars().filter(|x| x == &policy.letter).count() as i32;
+    count >= policy.min && count <= policy.max
+}
+
+pub fn policy2<'a>(policy: &'a Policy) -> bool {
+    let exists_at_min = policy
+        .value
+        .chars()
+        .nth((policy.min - 1) as usize)
+        .expect("failed to find nth")
+        == policy.letter;
+    let exists_at_max = policy
+        .value
+        .chars()
+        .nth((policy.max - 1) as usize)
+        .expect("failed to find nth")
+        == policy.letter;
+
+    return exists_at_min != exists_at_max;
+}
 
 pub fn run() {
     let mut file = std::fs::File::open("res/2/input").unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
-    print!("{}", contents);
+
+    let re = Regex::new(r"(\d+)-(\d+) ([a-z]): ([a-z]+)").unwrap();
+    let mut policy1_valid_count = 0;
+    let mut policy2_valid_count = 0;
+    for line in contents.lines() {
+        for cap in re.captures_iter(line) {
+            let min = cap[1].parse::<i32>().unwrap();
+            let max = cap[2].parse::<i32>().unwrap();
+            let letter = cap[3].chars().nth(0).unwrap();
+            let value = &cap[4];
+            let mut policy = Policy {
+                min,
+                max,
+                letter,
+                value,
+            };
+            if policy1(&policy) {
+                policy1_valid_count += 1;
+            }
+            if policy2(&policy) {
+                policy2_valid_count += 1;
+            }
+        }
+    }
+
+    println!("policy 1: {}", policy1_valid_count);
+    println!("policy 2: {}", policy2_valid_count);
 }
